@@ -1,9 +1,16 @@
 README
+
 Version firmware 1.0.0
 Use library:
+
 Arduino Joystick Library = by MHeironimus. GitHub = https://github.com/MHeironimus/ArduinoJoystickLibrary;
+
 GyverEncoder = by AlexGyver https://github.com/AlexGyver temporarily not used.
+
 Author firmware MLag = GitHub https://github.com/Mlag123
+
+
+
 ENG:
 This is firmware for wheel supported next Arduino board:
 Arduino micro, Arduno Leonardo. It is on chips ATmega32U4
