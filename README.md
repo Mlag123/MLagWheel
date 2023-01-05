@@ -8,6 +8,10 @@ ENG:
 This is firmware for wheel supported next Arduino board:
 Arduino micro, Arduno Leonardo. It is on chips ATmega32U4
 I do not guarantee work on other boards.
+
+
+
+
 RU:
 Эта прошивка для руля поддерживает следующие виды ардуино плат:
 Arduino micro, Arduno Leonardo. Только на чипах ATmega32U4
