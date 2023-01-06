@@ -1,6 +1,8 @@
+#include <EEPROM.h>
+
 /*
 README
-Version firmware 1.0.0
+Version firmware 1.0.1
 Use library:
 Arduino Joystick Library = by MHeironimus. GitHub = https://github.com/MHeironimus/ArduinoJoystickLibrary;
 GyverEncoder = by AlexGyver https://github.com/AlexGyver temporarily not used.
@@ -31,14 +33,21 @@ Joystick_ Joystick;
 #define ENC_A 2
 #define ENC_B 4
 #define ENC_TYPE 1          //type Encodeer
-#define minRangeWheel 0     // минимальное значение руля 0,1023 |  Minimal range wheel 0-1023 
-#define maxRangeWheel 1023  // максимальное значение руля 0,1023 | Max range wheel 0-1023
 #define clutch A2
 #define brake A3
 #define throttle A4
-#define clutch_on 1    //есть ли педаль сцепления?, если да, то 1  | is there a clutch pedal? Put 1
-#define brake_on 1     //есть ли педаль тормоза?, если да, то 1 | is there a brake pedal? Put 1
-#define throttle_on 1  //есть ли педаль газа?, если да, то 1 | is there a throttle pedal? Put 1
+#define clutch_on 0    //есть ли педаль сцепления?, если да, то 1  | is there a clutch pedal? Put 1
+#define brake_on 0     //есть ли педаль тормоза?, если да, то 1 | is there a brake pedal? Put 1
+#define throttle_on 0  //есть ли педаль газа?, если да, то 1 | is there a throttle pedal? Put 1
+//range**************************************************
+#define minRangeWheel 0     // минимальное значение руля 0,1023 |  Minimal range wheel 0-1023
+#define maxRangeWheel 1023  // максимальное значение руля 0,1023 | Max range wheel 0-1023
+#define minRangeclutch 0
+#define maxRangeclutch 1023
+#define minRangebrake 0
+#define maxRangebrake 1023
+#define minRangethrottle 0
+#define maxRangethrottle 1023
 
 
 volatile int encCounter;
@@ -47,15 +56,11 @@ volatile boolean state0, lastState, turnFlag;
 
 
 void setup() {
-  // put your setup code here, to run once:
-  /* pinMode(but_1, INPUT);
-  pinMode(wheel, OUTPUT);
-
-  pinMode(clutch, INPUT);
-  pinMode(brake, INPUT);
-  pinMode(throttle, INPUT);
-  */
-
+  /*
+bool includeBrake = true;
+bool includeSteering = true;
+bool includeThrottle = true; 
+*/
 
 
   attachInterrupt(0, enc, CHANGE);  //прерывание
@@ -75,50 +80,81 @@ int enc() {
   }
 }
 int clutchAxis() {
-  int clutch_change = map(analogRead(clutch), 0, 1023, -127, 128);
+  int clutch_change = map(analogRead(clutch), minRangeclutch, maxRangeclutch, minRangeclutch, maxRangeclutch);
   if (clutch_on == 1) {
-    Joystick.setZAxis(clutch_change);
+    Joystick.setZAxis(clutch_change); //
   }
   return clutch_change;
 }
 int brakeAxis() {
-  int brake_change = map(analogRead(brake), 0, 1023, -127, 128);
+  int brake_change = map(analogRead(brake), minRangebrake, maxRangebrake, minRangebrake, maxRangebrake);
   if (brake_on == 1) {
-    Joystick.setYAxis(brake_change);
+    Joystick.setBrake(brake_change); //
   }
   return brake_change;
 }
 int throttleAxis() {
-  int throttle_change = map(analogRead(throttle), 0, 1023, -127, 128);
-if(throttle_on == 1){
-    Joystick.setRxAxis(throttle_change);
-}
+  int throttle_change = map(analogRead(throttle), minRangethrottle, maxRangethrottle, minRangethrottle, maxRangethrottle);
+  if (throttle_on == 1) {
+    Joystick.setThrottle(throttle_change); //
+  }
   return throttle_change;
 }
-void loop() { 
-  Joystick.setXAxisRange(minRangeWheel, maxRangeWheel);
+
+void eproom_save(){
+  /*
+   short int wheel_adr = 0;
+   short int brake_adr = 1;
+   short int clutch_adr = 2;
+   short int throttle_adr = 3;
+   
+#define erp_wheel_min_range 0 //calibrate adress min wheel
+#define erp_wheel_max_range 1 //calibrate adress max wheel
+
+#define erp_cltuch_min_range 2 //calibrate adress min wheel
+#define erp_cltuch_max_range 3 //calibrate adress max wheel
+
+#define erp_throttle_min_range 4 //calibrate adress min wheel
+#define erp_throttle_max_range 5 //calibrate adress max wheel
+
+#define erp_brake_min_range 6 //calibrate adress min wheel
+#define erp_brake_max_range 7 //calibrate adress max wheel
+*/
+
+
+
+}
+
+
+//MAIN
+void loop() {
+  Joystick.setSteeringRange(minRangeWheel, maxRangeWheel);
 
 
   int wheel_axis;
 
 
   if (typeSensor == 0) {
-    wheel_axis = map(analogRead(wheel), minRangeWheel, maxRangeWheel, -128, 127);
+    wheel_axis = map(analogRead(wheel), minRangeWheel, maxRangeWheel, minRangeWheel, maxRangeWheel);
   } else if (typeSensor == 1) {
 
-    wheel_axis = map(enc(), minRangeWheel, maxRangeWheel, -128, 127);
+    wheel_axis = map(enc(), minRangeWheel, maxRangeWheel, minRangeWheel, maxRangeWheel);
   }
 
   if (debug == 1) {
-
+    Serial.print("\t");
+    Serial.println("wheel");
     Serial.println(wheel_axis);
+    Serial.print("\t");
     Serial.println(clutchAxis());
+    Serial.print("\t");
     Serial.println(brakeAxis());
+    Serial.print("\t");
     Serial.println(throttleAxis());
   }
 
 
-  Joystick.setXAxis(wheel_axis);
+  Joystick.setSteering(wheel_axis);
   int throttleAxis();
   int brakeAxis();
   int clutchAxis();
