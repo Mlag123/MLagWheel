@@ -101,29 +101,7 @@ int throttleAxis() {
   return throttle_change;
 }
 
-void eproom_save(){
-  /*
-   short int wheel_adr = 0;
-   short int brake_adr = 1;
-   short int clutch_adr = 2;
-   short int throttle_adr = 3;
-   
-#define erp_wheel_min_range 0 //calibrate adress min wheel
-#define erp_wheel_max_range 1 //calibrate adress max wheel
 
-#define erp_cltuch_min_range 2 //calibrate adress min wheel
-#define erp_cltuch_max_range 3 //calibrate adress max wheel
-
-#define erp_throttle_min_range 4 //calibrate adress min wheel
-#define erp_throttle_max_range 5 //calibrate adress max wheel
-
-#define erp_brake_min_range 6 //calibrate adress min wheel
-#define erp_brake_max_range 7 //calibrate adress max wheel
-*/
-
-
-
-}
 
 
 //MAIN
